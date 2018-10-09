@@ -1,7 +1,7 @@
 import { createServer } from "http";
 import app from "./app";
 
-const port = 4000
+const port = 4000;
 const server = createServer(app);
 let currentApp = app;
 
@@ -16,4 +16,3 @@ if (module.hot) {
     currentApp = app;
   });
 }
-

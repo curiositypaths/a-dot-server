@@ -5,6 +5,10 @@
   "repository": "https://github.com/curiositypaths/a-dot-server",
   "author": "Jason Decker",
   "license": "Mozilla Public License 2.0",
+  "scripts": {
+    "start": "webpack --colors --progress",
+    "dev": "webpack --colors --progress --mode development"
+  },
   "dependencies": {
     "express": "^4.16.3"
   },

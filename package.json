@@ -13,6 +13,11 @@
     "@babel/plugin-transform-regenerator": "^7.0.0",
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
-    "babel-loader": "^8.0.4"
+    "babel-loader": "^8.0.4",
+    "source-map-support": "^0.5.9",
+    "start-server-webpack-plugin": "^2.2.5",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-node-externals": "^1.7.2"
   }
 }

@@ -4,5 +4,8 @@
   "main": "index.js",
   "repository": "https://github.com/curiositypaths/a-dot-server",
   "author": "Jason Decker",
-  "license": "Mozilla Public License 2.0"
+  "license": "Mozilla Public License 2.0",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
 }

@@ -7,5 +7,12 @@
   "license": "Mozilla Public License 2.0",
   "dependencies": {
     "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-transform-regenerator": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "babel-loader": "^8.0.4"
   }
 }

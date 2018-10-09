@@ -1,4 +1,4 @@
-# API Server for the A. web client
+# Express API server for the `A.` web client
 
 ## Start server
 `yarn dev`

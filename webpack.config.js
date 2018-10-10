@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 const StartServerPlugin = require("start-server-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
 
 module.exports = {
   entry: ["webpack/hot/poll?1000", "./src/index"],
@@ -46,7 +47,8 @@ module.exports = {
       banner: 'require("source-map-support").install();',
       raw: true,
       entryOnly: false
-    })
+    }),
+    new Dotenv()
   ],
   output: { path: path.join(__dirname, "dist"), filename: "server.js" }
 };

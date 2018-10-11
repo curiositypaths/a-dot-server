@@ -3,7 +3,7 @@ const userController = require("../controllers/user");
 const bodyParser = require("body-parser");
 
 const app = express();
-app.use(bodyParser);
+app.use(bodyParser.json());
 
 app.get("/", (req, res) => res.json({ message: "In bocca al lupo!" }));
 

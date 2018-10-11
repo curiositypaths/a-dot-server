@@ -1,5 +1,6 @@
 import express from "express";
 import db from "../models/index";
+import Auth from "../services/userRegistration";
 
 const app = express();
 

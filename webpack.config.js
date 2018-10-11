@@ -23,7 +23,7 @@ module.exports = {
             loader: "babel-loader",
             options: {
               babelrc: false,
-              presets: [["@babel/preset-env", { modules: false }]],
+              presets: [["@babel/preset-env", { modules: "commonjs" }]],
               plugins: [
                 "@babel/plugin-transform-runtime",
                 "@babel/plugin-transform-async-to-generator",

@@ -4,7 +4,10 @@ const path = require("path");
 const Sequelize = require("sequelize");
 const basename = path.basename(__filename);
 const config = require("../config/dbConfig");
-const { collectSequelizeModelsFilenames } = require("../helpers/db");
+const {
+  collectSequelizeModelsFilenames,
+  capitalizeModelName
+} = require("../helpers/db");
 
 const db = {};
 const sequelize = new Sequelize(config);
@@ -14,7 +17,7 @@ const requireSequelizeModel = sequelizeModelFileName =>
 
 const instantiateSequelizeModel = module => {
   const model = module(sequelize, Sequelize, config);
-  db[model.name] = model;
+  db[capitalizeModelName(model.name)] = model;
 };
 
 collectSequelizeModelsFilenames(__dirname, basename)

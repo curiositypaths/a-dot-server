@@ -7,6 +7,10 @@ const collectSequelizeModelsFilenames = (directoryName, basename) =>
     );
   });
 
+const capitalizeModelName = modelName =>
+  modelName.charAt(0).toUpperCase() + modelName.slice(1);
+
 module.exports = {
-  collectSequelizeModelsFilenames
+  collectSequelizeModelsFilenames,
+  capitalizeModelName
 };

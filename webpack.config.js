@@ -25,8 +25,9 @@ module.exports = {
               babelrc: false,
               presets: [["@babel/preset-env", { modules: false }]],
               plugins: [
-                "@babel/plugin-transform-regenerator",
-                "@babel/plugin-transform-runtime"
+                "@babel/plugin-transform-runtime",
+                "@babel/plugin-transform-async-to-generator",
+                "@babel/plugin-transform-regenerator"
               ]
             }
           }

@@ -23,7 +23,6 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING(maxFirstAndLastNameLength),
         allowNull: false,
         validate: {
-          notNull: true,
           len: firstAndLastNameLengthValidationParams
         }
       },
@@ -31,7 +30,6 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING(maxFirstAndLastNameLength),
         allowNull: false,
         validate: {
-          notNull: true,
           len: firstAndLastNameLengthValidationParams
         }
       },

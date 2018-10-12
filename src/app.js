@@ -1,22 +1,13 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const auth = require("../middleware/auth");
-const passport = require("passport");
+const api = require("./api");
 
 const app = express();
-app.use(bodyParser.json());
 
-app.get("/", (req, res) => res.json({ message: "In bocca al lupo!" }));
+app.use(function(req, res, next) {
+  console.log("Req is :", req);
+  next();
+});
 
-app.post(
-  "/",
-  passport.authenticate("signup", { session: false }),
-  async (req, res, next) => {
-    res.json({
-      message: "Signup successful",
-      user: req.user
-    });
-  }
-);
+//app.use("/api/v1", api);
 
-export default app;
+module.export = app;

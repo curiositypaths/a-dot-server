@@ -1,5 +1,5 @@
-import { createServer } from "http";
-import app from "./app";
+const { createServer } = require("http");
+const app = require("./app");
 
 const port = 4000;
 const server = createServer(app);

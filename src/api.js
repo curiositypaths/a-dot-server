@@ -8,16 +8,6 @@ api.use(bodyParser.json());
 
 api.use(syncReqBodyLogger);
 
-api.post("/sessions", (req, res, next) => {
-  const userRegistrationRequest = registerUser(req, res, next);
-
-  userRegistrationRequest.then(user => {
-    res.json({ user });
-  });
-
-  userRegistrationRequest.catch(error => {
-    res.json({ error });
-  });
-});
+api.post("/sessions", registerUser);
 
 module.exports = api;

@@ -1,7 +1,14 @@
 const { User } = require("../models");
 
 const registerUser = (req, res, next) => {
-  return User.create(req.body);
+  const userRegistrationRequest = User.create(req.body);
+  userRegistrationRequest.then(user => {
+    res.json({ user });
+  });
+
+  userRegistrationRequest.catch(error => {
+    res.json({ error });
+  });
 };
 
 module.exports = {

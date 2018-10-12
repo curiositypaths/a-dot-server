@@ -6,10 +6,10 @@ const registerUser = async (req, res, next) => {
     const user = await User.create(req.body);
     console.log("User....", user);
     if (user) {
-      return res.json({ user: JSON.stringify(user) });
+      return res.json({ user: "YES" });
     }
   } catch (error) {
-    return res.json({ message: JSON.stringify(error) });
+    return res.json({ message: "NO" });
   }
 };
 

@@ -6,12 +6,12 @@ const api = express.Router();
 api.use(bodyParser.json());
 
 api.use(function(req, res, next) {
-  console.log("Req is :", req);
-  next();
+  console.log("In API ---------------------", req);
+  next(req, res, next);
 });
 
-api.post("/session", (req, res, next) => {
-  console.log("fasfasdfasdf");
+api.post("sessions", (req, res, next) => {
+  console.log("In API POST", req);
   registerUser(req, res, next);
 });
 

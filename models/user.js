@@ -12,9 +12,10 @@ module.exports = (sequelize, Sequelize) => {
   const minPasswordLength = 8;
   const maxPasswordLength = 72;
   const passwordLengthValidationParams = [minPasswordLength, maxPasswordLength];
+
   const generateBcryptHash = clearTextPassword => {
     const bcryptSaltRounds = 10;
-    //synchronous version
+    //synchronous hash generation
     return bcrypt.hashSync(clearTextPassword, bcryptSaltRounds);
   };
 
@@ -74,7 +75,7 @@ module.exports = (sequelize, Sequelize) => {
   User.sync({ force: true });
 
   User.prototype.isValidPassword = function(clearTextPassword) {
-    return bcrypt.compareSync(clearTextPassword, this.password); // true
+    return bcrypt.compareSync(clearTextPassword, this.password);
   };
 
   return User;

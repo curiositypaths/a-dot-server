@@ -61,5 +61,8 @@ module.exports = (sequelize, Sequelize) => {
     }
   );
   User.sync({ force: true });
+  User.prototype.isValidPassword = function() {
+    return true;
+  };
   return User;
 };

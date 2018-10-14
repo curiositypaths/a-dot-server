@@ -8,14 +8,14 @@ module.exports = (sequelize, Sequelize) => {
     maxFirstAndLastNameLength
   ];
 
-  //Per bcrypt implementation, only the first 72 characters of a string are used. Any extra characters are ignored when matching passwords.
+  // Per bcrypt implementation, only the first 72 characters of a string are used. Any extra characters are ignored when matching passwords.
   const minPasswordLength = 8;
   const maxPasswordLength = 72;
   const passwordLengthValidationParams = [minPasswordLength, maxPasswordLength];
 
   const generateBcryptHash = clearTextPassword => {
     const bcryptSaltRounds = 10;
-    //synchronous hash generation
+    // synchronous hash generation
     return bcrypt.hashSync(clearTextPassword, bcryptSaltRounds);
   };
 
@@ -74,7 +74,7 @@ module.exports = (sequelize, Sequelize) => {
 
   User.sync({ force: true });
 
-  User.prototype.isValidPassword = function(clearTextPassword) {
+  User.prototype.isValidPassword = function isValidPassword(clearTextPassword) {
     return bcrypt.compareSync(clearTextPassword, this.password);
   };
 

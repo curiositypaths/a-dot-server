@@ -2,6 +2,7 @@
 
 const path = require("path");
 const Sequelize = require("sequelize");
+
 const basename = path.basename(__filename);
 const { generateDBConfiguration } = require("../helpers");
 

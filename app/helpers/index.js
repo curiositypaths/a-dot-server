@@ -1,4 +1,5 @@
 const fs = require("fs");
+const bcrypt = require("bcrypt");
 
 // Misc helpers
 const syncReqBodyLogger = (req, res, next) => {
@@ -6,14 +7,33 @@ const syncReqBodyLogger = (req, res, next) => {
   next();
 };
 
+const DEVELOPMENT = "development";
+
 // ORM related helpers
-const generateDBConfiguration = () => ({
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  host: process.env.DB_HOST,
-  dialect: process.env.DB_ORM_DIALECT
-});
+// const generateDBConfiguration = () => ({
+//   username: process.env.DB_USERNAME,
+//   password: process.env.DB_PASSWORD,
+//   database: process.env.DB_NAME,
+//   host: process.env.DB_HOST,
+//   dialect: process.env.DB_ORM_DIALECT
+// });
+const minFirstAndLastNameLength = 2;
+const maxFirstAndLastNameLength = 50;
+const firstAndLastNameLengthValidationParams = [
+  minFirstAndLastNameLength,
+  maxFirstAndLastNameLength
+];
+
+// Per bcrypt implementation, only the first 72 characters of a string are used. Any extra characters are ignored when matching passwords.
+const minPasswordLength = 8;
+const maxPasswordLength = 72;
+const passwordLengthValidationParams = [minPasswordLength, maxPasswordLength];
+
+const generateBcryptHash = clearTextPassword => {
+  const bcryptSaltRounds = 10;
+  // synchronous hash generation
+  return bcrypt.hashSync(clearTextPassword, bcryptSaltRounds);
+};
 
 const collectSequelizeModelsFilenames = (directoryName, basename) =>
   fs
@@ -30,5 +50,10 @@ module.exports = {
   collectSequelizeModelsFilenames,
   capitalizeModelName,
   syncReqBodyLogger,
-  generateDBConfiguration
+  DEVELOPMENT,
+  maxFirstAndLastNameLength,
+  maxPasswordLength,
+  passwordLengthValidationParams,
+  firstAndLastNameLengthValidationParams,
+  generateBcryptHash
 };

@@ -8,9 +8,9 @@
   "scripts": {
     "start": "webpack --colors --progress",
     "dev": "webpack --colors --progress --mode development",
-    "format": "prettier --write \"src/**/*.{js,json}\"",
-    "format:check": "prettier --list-different \"src/**/*.{js,json}\"",
-    "lint": "eslint \"src/**/*.js\""
+    "format": "prettier --write \"app/**/*.{js,json}\"",
+    "format:check": "prettier --list-different \"app/**/*.{js,json}\"",
+    "lint": "eslint \"app/**/*.js\""
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",

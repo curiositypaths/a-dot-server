@@ -3,11 +3,13 @@
 const path = require("path");
 const Sequelize = require("sequelize");
 const basename = path.basename(__filename);
-const config = require("../config/dbConfig");
+const { generateDBConfiguration } = require("../helpers");
+
+const config = generateDBConfiguration();
 const {
   collectSequelizeModelsFilenames,
   capitalizeModelName
-} = require("../helpers/db");
+} = require("../helpers");
 
 const db = {};
 const sequelize = new Sequelize(config);

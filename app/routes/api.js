@@ -1,9 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const { registerUser } = require("../controllers/user");
-const { syncReqBodyLogger } = require("../helpers/middleware");
+const { syncReqBodyLogger } = require("../helpers");
 const passport = require("passport");
-const { setupLoginMiddleware } = require("../config/passport");
+const { setupLoginMiddleware } = require("../helpers/passport");
 const { createSession } = require("../controllers/session");
 
 const api = express.Router();

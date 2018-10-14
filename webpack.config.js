@@ -5,7 +5,7 @@ const StartServerPlugin = require("start-server-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
 
 module.exports = {
-  entry: ["webpack/hot/poll?1000", "./src/index"],
+  entry: ["webpack/hot/poll?1000", "./app/server"],
   watch: true,
   devtool: "sourcemap",
   target: "node",

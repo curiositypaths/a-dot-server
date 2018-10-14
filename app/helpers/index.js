@@ -10,13 +10,6 @@ const syncReqBodyLogger = (req, res, next) => {
 const DEVELOPMENT = "development";
 
 // ORM related helpers
-// const generateDBConfiguration = () => ({
-//   username: process.env.DB_USERNAME,
-//   password: process.env.DB_PASSWORD,
-//   database: process.env.DB_NAME,
-//   host: process.env.DB_HOST,
-//   dialect: process.env.DB_ORM_DIALECT
-// });
 const minFirstAndLastNameLength = 2;
 const maxFirstAndLastNameLength = 50;
 const firstAndLastNameLengthValidationParams = [

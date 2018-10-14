@@ -17,7 +17,7 @@ const authenticateUser = async (email, password, done) => {
   }
 };
 
-const setupLoginMiddleware = () => {
+const mountLoginMiddleware = () => {
   passport.use(
     "local",
     new LocalStrategy(
@@ -31,5 +31,5 @@ const setupLoginMiddleware = () => {
 };
 
 module.exports = {
-  setupLoginMiddleware
+  mountLoginMiddleware
 };

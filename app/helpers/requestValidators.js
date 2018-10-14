@@ -7,6 +7,25 @@ const {
   maxPasswordLength
 } = require("../helpers");
 
+const validatorOptions = {
+  abortEarly: false,
+  stripUnknown: true,
+  presence: "required"
+};
+
+const formatValidationsErrorsForClient = ({ details: errorsDetails }) => {
+  return errorsDetails.reduce((acc, cv) => {
+    console.log("Acc is ", acc);
+    console.log("CV is ", cv);
+    if (acc[cv.path[0]]) {
+      acc[cv.path[0]].push(cv.message);
+    } else {
+      acc[cv.path[0]] = [cv.message];
+    }
+    return acc;
+  }, {});
+};
+
 const registerUserValidatorNameRequirement = Joi.string()
   .alphanum()
   .min(minFirstAndLastNameLength)
@@ -25,5 +44,7 @@ const registerUserSchema = Joi.object().keys({
 });
 
 module.exports = {
-  registerUserSchema
+  registerUserSchema,
+  validatorOptions,
+  formatValidationsErrorsForClient
 };

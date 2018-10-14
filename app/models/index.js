@@ -10,11 +10,6 @@ const {
   capitalizeModelName
 } = require("../helpers");
 
-console.log(
-  "Model files are ",
-  collectSequelizeModelsFilenames(__dirname, basename)
-);
-
 const appEnvironment = process.env.ENVIRONMENT
   ? process.env.ENVIRONMENT
   : DEVELOPMENT;

@@ -7,34 +7,35 @@ const {
   maxPasswordLength
 } = require("../helpers");
 
-const validatorOptions = {
-  abortEarly: false,
-  stripUnknown: true,
-  presence: "required"
-};
+// const validatorOptions = {
+//   abortEarly: false,
+//   stripUnknown: true,
+//   presence: "required"
+// };
 
-const formatValidationsErrorsForClient = ({ details: errorsDetails }) => {
-  return errorsDetails.reduce((acc, cv) => {
-    console.log("Acc is ", acc);
-    console.log("CV is ", cv);
-    if (acc[cv.path[0]]) {
-      acc[cv.path[0]].push(cv.message);
+const formatSchemaValidationErrors = ({ details: errorsDetails }) => {
+  return errorsDetails.reduce((msg, validationError) => {
+    const paramName = validationError.path[0];
+    if (msg[paramName]) {
+      msg[paramName].push(validationError.message);
     } else {
-      acc[cv.path[0]] = [cv.message];
+      msg[paramName] = [validationError.message];
     }
-    return acc;
+    return msg;
   }, {});
 };
 
-const registerUserValidatorNameRequirement = Joi.string()
-  .alphanum()
-  .min(minFirstAndLastNameLength)
-  .max(maxFirstAndLastNameLength)
-  .required();
-
-const registerUserSchema = Joi.object().keys({
-  firstName: registerUserValidatorNameRequirement,
-  lastName: registerUserValidatorNameRequirement,
+const createUserParamsSchema = Joi.object().keys({
+  firstName: Joi.string()
+    .alphanum()
+    .min(minFirstAndLastNameLength)
+    .max(maxFirstAndLastNameLength)
+    .required(),
+  lastName: Joi.string()
+    .alphanum()
+    .min(minFirstAndLastNameLength)
+    .max(maxFirstAndLastNameLength)
+    .required(),
   password: Joi.string()
     .alphanum()
     .min(minPasswordLength)
@@ -43,8 +44,24 @@ const registerUserSchema = Joi.object().keys({
   email: Joi.string().email({ minDomainAtoms: 2 })
 });
 
+// const registerUserValidatorNameRequirement = Joi.string()
+//   .alphanum()
+//   .min(minFirstAndLastNameLength)
+//   .max(maxFirstAndLastNameLength)
+//   .required();
+
+// const registerUserSchema = Joi.object().keys({
+//   firstName: registerUserValidatorNameRequirement,
+//   lastName: registerUserValidatorNameRequirement,
+//   password: Joi.string()
+//     .alphanum()
+//     .min(minPasswordLength)
+//     .max(maxPasswordLength)
+//     .required(),
+//   email: Joi.string().email({ minDomainAtoms: 2 })
+// });
+
 module.exports = {
-  registerUserSchema,
-  validatorOptions,
-  formatValidationsErrorsForClient
+  createUserParamsSchema,
+  formatSchemaValidationErrors
 };

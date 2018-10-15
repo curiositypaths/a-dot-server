@@ -1,17 +1,19 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const passport = require("passport");
-const { registerUser } = require("../controllers/user");
 const { syncReqBodyLogger } = require("../helpers");
 const { mountLoginMiddleware } = require("../helpers/passport");
-//const { createSession } = require("../controllers/session");
+const { usersRouterPrefix, usersRouter } = require("./users");
 
-const api = express.Router();
+const apiRouterPrefix = "/api/v1";
+const apiRouter = express.Router();
 
-api.use(bodyParser.json());
-api.use(syncReqBodyLogger);
-api.use(passport.initialize()) && mountLoginMiddleware();
-api.post("/users", registerUser);
-//api.post("/sessions", createSession);
+apiRouter.use(bodyParser.json());
+apiRouter.use(syncReqBodyLogger);
+apiRouter.use(passport.initialize()) && mountLoginMiddleware();
+apiRouter.use(usersRouterPrefix, usersRouter);
 
-module.exports = api;
+module.exports = {
+  apiRouter,
+  apiRouterPrefix
+};

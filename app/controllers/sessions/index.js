@@ -10,6 +10,7 @@ const create = (req, res, next) => {
     res.json({ session });
   };
   const errorCb = error => {
+    console.log(error);
     res.json({ error });
   };
 
@@ -17,8 +18,8 @@ const create = (req, res, next) => {
     "local",
     { failureRedirect: "/login" },
     (error, user, message) => {
-      const jwtTokenWrapper = issueToken(req.body);
-      const params = generateSessionParams(user, jwtTokenWrapper);
+      const { jwtToken, payload } = issueToken(req.body);
+      const params = generateSessionParams(user, payload);
       console.log("Params are ------>", params);
       createResource(params, schema, model, successCb, errorCb, res);
     }

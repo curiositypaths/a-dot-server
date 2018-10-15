@@ -9,17 +9,19 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     issuedAt: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DATE,
       allowNull: false
     },
     expiresAt: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DATE,
       allowNull: false
     },
     UserId: {
       type: DataTypes.INTEGER,
       allowNull: false
-    }
+    },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
   });
   Session.associate = function({ User, Session }) {
     Session.belongsTo(User);

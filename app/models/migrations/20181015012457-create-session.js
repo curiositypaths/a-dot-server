@@ -18,11 +18,11 @@ module.exports = {
           allowNull: false
         },
         issuedAt: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.DATE,
           allowNull: false
         },
         expiresAt: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.DATE,
           allowNull: false
         },
         UserId: {

@@ -13,8 +13,8 @@ const tokenDuration = 86400; // One day in epoch time
 const tokenValidityValues = () => {
   const nowInEpochTime = Date.now().valueOf();
   return {
-    issuedAt: nowInEpochTime,
-    expiresAt: nowInEpochTime + tokenDuration
+    iat: nowInEpochTime,
+    exp: nowInEpochTime + tokenDuration
   };
 };
 
@@ -24,10 +24,10 @@ const tokenOptions = {
   algorithm
 };
 
-const issueToken = ({ email: sub }, { issuedAt: iat, expiresAt: exp }) => {
+const issueToken = ({ email: sub }) => {
   // hNano ID Collision Calculator: https://zelark.github.io/nano-id-cc/
   const sessionToken = nanoId();
-  const { issuedAt, expiresAt } = tokenValidityValues();
+  const { iat, exp } = tokenValidityValues();
   const payload = {
     sub, // sub https://tools.ietf.org/html/rfc7519#section-4.1.2
     sessionToken,
@@ -35,7 +35,7 @@ const issueToken = ({ email: sub }, { issuedAt: iat, expiresAt: exp }) => {
     exp
   };
   const jwtToken = jwt.sign(payload, secret, tokenOptions);
-  return jwtToken;
+  return { jwtToken, payload };
 };
 
 const parseJwtToken = jwtToken => jwt.verify(jwtToken, process.env.JWT_SECRET);

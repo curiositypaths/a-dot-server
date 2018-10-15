@@ -1,4 +1,4 @@
-const { User: model, Session } = require("../../models");
+const { User: model } = require("../../models");
 const { createResource } = require("../../helpers/restfulControllers");
 
 const create = ({ body: params }, res, next) => {

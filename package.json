@@ -10,7 +10,8 @@
     "dev": "webpack --colors --progress --mode development",
     "format": "prettier --write \"app/**/*.{js,json}\"",
     "format:check": "prettier --list-different \"app/**/*.{js,json}\"",
-    "lint": "eslint \"app/**/*.js\""
+    "lint": "eslint \"app/**/*.js\"",
+    "migrate": "node -r dotenv/config ./node_modules/.bin/sequelize db:migrate"
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",

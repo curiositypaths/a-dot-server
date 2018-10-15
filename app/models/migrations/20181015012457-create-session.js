@@ -1,6 +1,6 @@
 "use strict";
 
-const { maxSessionTokenLength } = require("../../helpers/");
+const { maxSessionTokenLength } = require("../session/validationParams");
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -18,11 +18,11 @@ module.exports = {
           allowNull: false
         },
         issuedAt: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.DATE,
           allowNull: false
         },
         expiresAt: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.DATE,
           allowNull: false
         },
         UserId: {

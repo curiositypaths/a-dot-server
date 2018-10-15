@@ -1,23 +1,16 @@
 "use strict";
-const bcrypt = require("bcrypt");
 const {
   maxFirstAndLastNameLength,
   maxPasswordLength,
   passwordLengthValidationParams,
-  firstAndLastNameLengthValidationParams,
-  generateBcryptHash
-} = require("../helpers");
+  firstAndLastNameLengthValidationParams
+} = require("./validationParams");
+const { generateBcryptHash, isValidPassword } = require("./helpers");
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",
     {
-      // id: {
-      //   type: DataTypes.INTEGER,
-      //   allowNull: false,
-      //   autoIncrement: true,
-      //   primaryKey: true
-      // },
       firstName: {
         type: DataTypes.STRING(maxFirstAndLastNameLength),
         allowNull: false,
@@ -61,8 +54,6 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(Session, { as: "Sessions" });
   };
   // instance methods definitions
-  User.prototype.isValidPassword = function isValidPassword(clearTextPassword) {
-    return bcrypt.compareSync(clearTextPassword, this.password);
-  };
+  User.prototype.isValidPassword = isValidPassword;
   return User;
 };

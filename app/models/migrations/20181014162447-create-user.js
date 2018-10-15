@@ -3,7 +3,7 @@
 const {
   maxFirstAndLastNameLength,
   maxPasswordLength
-} = require("../../helpers");
+} = require("../user/validationParams");
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

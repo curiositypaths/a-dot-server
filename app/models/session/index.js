@@ -1,6 +1,6 @@
 "use strict";
 
-const { maxSessionTokenLength } = require("../helpers/");
+const { maxSessionTokenLength } = require("./validationParams");
 
 module.exports = (sequelize, DataTypes) => {
   const Session = sequelize.define("Session", {

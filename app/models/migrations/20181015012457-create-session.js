@@ -1,6 +1,6 @@
 "use strict";
 
-const { maxSessionTokenLength } = require("../../helpers/");
+const { maxSessionTokenLength } = require("../session/validationParams");
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

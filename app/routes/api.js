@@ -1,7 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const passport = require("passport");
-const { syncReqBodyLogger } = require("../helpers");
 const { mountLoginMiddleware } = require("../helpers/passport");
 const { usersRouterPrefix, usersRouter } = require("./users");
 
@@ -9,7 +8,6 @@ const apiRouterPrefix = "/api/v1";
 const apiRouter = express.Router();
 
 apiRouter.use(bodyParser.json());
-apiRouter.use(syncReqBodyLogger);
 apiRouter.use(passport.initialize()) && mountLoginMiddleware();
 apiRouter.use(usersRouterPrefix, usersRouter);
 

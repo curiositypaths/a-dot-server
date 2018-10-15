@@ -1,10 +1,12 @@
 const Joi = require("joi");
-const { User } = require("../models");
+const { issueToken, parseJwtToken } = require("../helpers/jwt");
+const { User, Session } = require("../models");
 const {
   registerUserSchema,
   validatorOptions,
   formatValidationsErrorsForClient
 } = require("../helpers/requestValidators");
+const { generateSessionParams } = require("../helpers");
 
 const registerUser = (req, res, next) => {
   const { error: validationError, value: validatedBody } = Joi.validate(
@@ -13,19 +15,28 @@ const registerUser = (req, res, next) => {
     validatorOptions
   );
 
+  const sendResponse = response => res.json(response);
+
   if (!validationError) {
     const userRegistrationRequest = User.create(validatedBody);
     userRegistrationRequest.then(user => {
-      res.json({ token: "Mock JWT Token" });
+      const jwtToken = issueToken(user.email);
+      const sessionParams = generateSessionParams(
+        user,
+        parseJwtToken(jwtToken)
+      );
+      const session = Session.create({ ...sessionParams }).then(() => {
+        sendResponse({ jwtToken, error: null });
+      });
     });
-    userRegistrationRequest.catch(error => {
-      res.json({ error });
+    userRegistrationRequest.catch(dbCreateError => {
+      sendResponse({ error: { dbCreateError } });
     });
   } else {
     const requestParamsErrors = formatValidationsErrorsForClient(
       validationError
     );
-    res.json({ requestParamsErrors });
+    sendResponse({ error: requestParamsErrors });
   }
 };
 

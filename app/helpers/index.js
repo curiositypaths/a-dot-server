@@ -28,6 +28,18 @@ const generateBcryptHash = clearTextPassword => {
   return bcrypt.hashSync(clearTextPassword, bcryptSaltRounds);
 };
 
+const maxSessionTokenLength = 21;
+
+const generateSessionParams = (
+  { id: UserId },
+  { sessionToken, iat: issuedAt, exp: expiresAt }
+) => ({
+  UserId,
+  sessionToken,
+  issuedAt,
+  expiresAt
+});
+
 const collectSequelizeModelsFilenames = (directoryName, basename) =>
   fs
     .readdirSync(directoryName)
@@ -50,5 +62,7 @@ module.exports = {
   maxPasswordLength,
   passwordLengthValidationParams,
   firstAndLastNameLengthValidationParams,
-  generateBcryptHash
+  generateBcryptHash,
+  maxSessionTokenLength,
+  generateSessionParams
 };

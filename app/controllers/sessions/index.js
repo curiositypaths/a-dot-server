@@ -6,26 +6,29 @@ const { generateSessionParams } = require("./helpers");
 
 const create = (req, res, next) => {
   const { create: schema } = require("./schemas");
-  const successCb = session => {
-    res.json({ session });
-  };
-  const errorCb = error => {
-    console.log(error);
-    res.json({ error });
-  };
 
+  const successCb = session => res.json({ session });
+  const errorCb = error => res.json({ error });
+
+  const { user } = req.verifyLoginCredentialsOutput;
+  const { jwtToken, payload } = issueToken(req.body);
+  const params = generateSessionParams(user, payload);
+
+  createResource(params, schema, model, successCb, errorCb, res);
+};
+
+const verifyLoginCredentials = (req, res, next) => {
   passport.authenticate(
     "local",
     { failureRedirect: "/login" },
     (error, user, message) => {
-      const { jwtToken, payload } = issueToken(req.body);
-      const params = generateSessionParams(user, payload);
-      console.log("Params are ------>", params);
-      createResource(params, schema, model, successCb, errorCb, res);
+      req.verifyLoginCredentialsOutput = { error, user, message };
+      next();
     }
   )(req, res, next);
 };
 
 module.exports = {
+  verifyLoginCredentials,
   create
 };

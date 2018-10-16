@@ -11,7 +11,8 @@
     "format": "prettier --write \"app/**/*.{js,json}\"",
     "format:check": "prettier --list-different \"app/**/*.{js,json}\"",
     "lint": "eslint \"app/**/*.js\"",
-    "migrate": "node -r dotenv/config ./node_modules/.bin/sequelize db:migrate"
+    "migrate": "node -r dotenv/config ./node_modules/.bin/sequelize db:migrate",
+    "resetDb": "dropdb a_dot_development && createdb a_dot_development && node -r dotenv/config ./node_modules/.bin/sequelize db:migrate "
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",

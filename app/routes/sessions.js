@@ -1,5 +1,5 @@
 const express = require("express");
-const { authenticateRequest, create } = require("../controllers/sessions/");
+const { verifyLoginCredentials, create } = require("../controllers/sessions/");
 
 const routePrefix = "/sessions";
 const router = express.Router();

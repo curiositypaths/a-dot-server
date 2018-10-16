@@ -13,7 +13,6 @@ const create = (req, res, next) => {
   const { user } = req.verifyLoginCredentialsOutput;
   const { jwtToken, payload } = issueToken(req.body);
   const params = generateSessionParams(user, payload);
-
   createResource(params, schema, model, successCb, errorCb, res);
 };
 

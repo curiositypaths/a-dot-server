@@ -3,12 +3,28 @@ const { Session: model } = require("../../models");
 const { createResource } = require("../../helpers/restfulControllers");
 const { issueToken } = require("../../helpers/jwt");
 const { generateSessionParams } = require("./helpers");
+const { authenticate: schema } = require("./schemas");
+const {
+  validateParams,
+  formatSchemaValidationErrors
+} = require("../../helpers/validators");
+const {
+  CREATED,
+  UNPROCESSABLE_ENTITY
+} = require("../../helpers/httpStatusCodes");
 
 const create = (req, res, next) => {
   const { create: schema } = require("./schemas");
 
-  const successCb = session => res.json({ session });
-  const errorCb = error => res.json({ error });
+  const successCb = () => {
+    res.statusCode = CREATED;
+    res.json({ jwtToken });
+  };
+
+  const errorCb = error => {
+    res.statusCode = UNPROCESSABLE_ENTITY;
+    res.json({ error });
+  };
 
   const { user } = req.verifyLoginCredentialsOutput;
   const { jwtToken, payload } = issueToken(req.body);
@@ -17,14 +33,23 @@ const create = (req, res, next) => {
 };
 
 const verifyLoginCredentials = (req, res, next) => {
-  passport.authenticate(
-    "local",
-    { failureRedirect: "/login" },
-    (error, user, message) => {
-      req.verifyLoginCredentialsOutput = { error, user, message };
-      next();
-    }
-  )(req, res, next);
+  const { validatedParams, validationError } = validateParams(req.body, schema);
+
+  const sendInvalidParamsResponse = () => {
+    res.json({ errors: formatSchemaValidationErrors(validationError) });
+  };
+
+  const authenticateCredentials = () =>
+    passport.authenticate(
+      "local",
+      { failureRedirect: "/login" },
+      (error, user, message) => {
+        req.verifyLoginCredentialsOutput = { error, user, message };
+        next();
+      }
+    )(req, res, next);
+
+  !validationError ? authenticateCredentials() : sendInvalidParamsResponse();
 };
 
 module.exports = {

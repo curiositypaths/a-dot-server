@@ -1,21 +1,7 @@
-const Joi = require("joi");
-
-const validateParams = (params, schema) => {
-  const schemaValidationOptions = {
-    abortEarly: false,
-    stripUnknown: true,
-    presence: "required"
-  };
-  const { error: validationError, value: validatedParams } = Joi.validate(
-    params,
-    schema,
-    schemaValidationOptions
-  );
-  return {
-    validatedParams,
-    validationError
-  };
-};
+const {
+  validateParams,
+  formatSchemaValidationErrors
+} = require("./validators");
 
 module.exports.createResource = (
   params,
@@ -33,7 +19,7 @@ module.exports.createResource = (
   };
 
   const sendInvalidParamsResponse = () => {
-    res.json({ error: validationError });
+    res.json({ errors: formatSchemaValidationErrors(validationError) });
   };
 
   !validationError ? createResource() : sendInvalidParamsResponse();

@@ -1,5 +1,22 @@
 const Joi = require("joi");
 
+const validateParams = (params, schema) => {
+  const schemaValidationOptions = {
+    abortEarly: false,
+    stripUnknown: true,
+    presence: "required"
+  };
+  const { error: validationError, value: validatedParams } = Joi.validate(
+    params,
+    schema,
+    schemaValidationOptions
+  );
+  return {
+    validatedParams,
+    validationError
+  };
+};
+
 const formatSchemaValidationErrors = ({ details: errorsDetails }) => {
   return errorsDetails.reduce((msg, validationError) => {
     const paramName = validationError.path[0];
@@ -13,5 +30,6 @@ const formatSchemaValidationErrors = ({ details: errorsDetails }) => {
 };
 
 module.exports = {
+  validateParams,
   formatSchemaValidationErrors
 };

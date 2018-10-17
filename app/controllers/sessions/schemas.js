@@ -8,7 +8,7 @@ const {
   maxPasswordLength
 } = require("../../models/user/validationParams");
 
-module.exports.authenticate = Joi.object().keys({
+const authenticate = Joi.object().keys({
   email: Joi.string().email({ minDomainAtoms: 2 }),
   password: Joi.string()
     .alphanum()
@@ -17,7 +17,7 @@ module.exports.authenticate = Joi.object().keys({
     .required()
 });
 
-module.exports.create = Joi.object().keys({
+const create = Joi.object().keys({
   UserId: Joi.number()
     .integer()
     .required(),
@@ -32,3 +32,8 @@ module.exports.create = Joi.object().keys({
     .timestamp()
     .required()
 });
+
+module.exports = {
+  authenticate,
+  create
+};

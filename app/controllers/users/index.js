@@ -1,13 +1,19 @@
 const { User: model } = require("../../models");
 const { createResource } = require("../../helpers/restfulControllers");
+const {
+  CREATED,
+  UNPROCESSABLE_ENTITY
+} = require("../../helpers/httpStatusCodes");
 
 const create = ({ body: params }, res, next) => {
   const { create: schema } = require("./schemas");
-  const successCb = user => {
-    res.json({ user });
+  const successCb = ({ firstName, lastName, email }) => {
+    res.statusCode = CREATED;
+    res.json({ firstName, lastName, emaily });
   };
-  const errorCb = () => {
-    console.log("errorCb will be invoked");
+  const errorCb = error => {
+    res.statusCode = UNPROCESSABLE_ENTITY;
+    res.json({ error });
   };
   createResource(params, schema, model, successCb, errorCb, res);
 };

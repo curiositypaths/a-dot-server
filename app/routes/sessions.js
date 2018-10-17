@@ -4,8 +4,12 @@ const { verifyLoginCredentials, create } = require("../controllers/sessions/");
 const routePrefix = "/sessions";
 const router = express.Router();
 
-router.post("/", verifyLoginCredentials);
-router.post("/", create);
+router
+  .route("/")
+  .post(verifyLoginCredentials)
+  .post(create);
+
+router.route("/").delete(verifyLoginCredentials);
 
 module.exports = {
   routePrefix,

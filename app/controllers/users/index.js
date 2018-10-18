@@ -9,7 +9,7 @@ const create = ({ body: params }, res, next) => {
   const { create: schema } = require("./schemas");
   const successCb = ({ firstName, lastName, email }) => {
     res.statusCode = CREATED;
-    res.json({ firstName, lastName, emaily });
+    res.json({ firstName, lastName, email });
   };
   const errorCb = error => {
     res.statusCode = UNPROCESSABLE_ENTITY;

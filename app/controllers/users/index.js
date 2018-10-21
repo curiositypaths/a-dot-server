@@ -1,5 +1,5 @@
 const { User: model } = require("../../models");
-const { createResource } = require("../../helpers/restfulControllers");
+const { createResource } = require("../");
 const {
   CREATED,
   UNPROCESSABLE_ENTITY

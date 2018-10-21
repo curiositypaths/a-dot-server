@@ -1,6 +1,6 @@
 const passport = require("passport");
 const { Session: model } = require("../../models");
-const { createResource } = require("../../helpers/restfulControllers");
+const { createResource } = require("../");
 const { issueToken } = require("../../helpers/jwt");
 const { generateSessionParams } = require("./helpers");
 const { authenticate: schema } = require("./schemas");

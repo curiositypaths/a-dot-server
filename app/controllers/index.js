@@ -1,7 +1,7 @@
 const {
   validateParams,
   formatSchemaValidationErrors
-} = require("./validators");
+} = require("../helpers/validators");
 
 module.exports.createResource = (
   params,

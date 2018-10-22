@@ -3,6 +3,8 @@ const {
   formatSchemaValidationErrors
 } = require("../helpers/validators");
 
+const { CREATED, UNPROCESSABLE_ENTITY } = require("../helpers/httpStatusCodes");
+
 module.exports.createResource = (
   params,
   schema,
@@ -19,6 +21,7 @@ module.exports.createResource = (
   };
 
   const sendInvalidParamsResponse = () => {
+    res.statusCode = UNPROCESSABLE_ENTITY;
     res.json({ errors: formatSchemaValidationErrors(validationError) });
   };
 

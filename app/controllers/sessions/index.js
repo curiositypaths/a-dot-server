@@ -36,6 +36,7 @@ const verifyLoginCredentials = (req, res, next) => {
   const { validatedParams, validationError } = validateParams(req.body, schema);
 
   const sendInvalidParamsResponse = () => {
+    res.statusCode = UNPROCESSABLE_ENTITY;
     res.json({ errors: formatSchemaValidationErrors(validationError) });
   };
 

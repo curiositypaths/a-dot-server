@@ -7,9 +7,8 @@ const router = express.Router();
 router
   .route("/")
   .post(verifyLoginCredentials)
-  .post(create);
-
-router.route("/").delete(verifyLoginCredentials);
+  .post(create)
+  .delete(verifyLoginCredentials);
 
 module.exports = {
   routePrefix,

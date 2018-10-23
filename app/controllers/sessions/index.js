@@ -18,7 +18,14 @@ const create = (req, res, next) => {
 
   const successCb = () => {
     res.statusCode = CREATED;
-    res.json({ jwtToken });
+    const { user: userDbInstance } = req.verifyLoginCredentialsOutput;
+    const { firstName, lastName, email } = userDbInstance;
+    const user = {
+      firstName,
+      lastName,
+      email
+    };
+    res.json({ jwtToken, user });
   };
 
   const errorCb = error => {

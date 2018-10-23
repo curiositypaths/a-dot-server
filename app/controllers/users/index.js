@@ -5,16 +5,18 @@ const {
   UNPROCESSABLE_ENTITY
 } = require("../../helpers/httpStatusCodes");
 
-const create = ({ body: params }, res, next) => {
+const create = (req, res, next) => {
   const { create: schema } = require("./schemas");
-  const successCb = ({ firstName, lastName, email }) => {
+  const successCb = user => {
     res.statusCode = CREATED;
-    res.json({ firstName, lastName, email });
+    req.verifyLoginCredentialsOutput = { error: null, user, message: null };
+    next();
   };
   const errorCb = error => {
     res.statusCode = UNPROCESSABLE_ENTITY;
     res.json({ error });
   };
+  const { body: params } = req;
   createResource(params, schema, model, successCb, errorCb, res);
 };
 

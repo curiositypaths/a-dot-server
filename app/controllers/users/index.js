@@ -14,7 +14,13 @@ const create = (req, res, next) => {
   };
   const errorCb = error => {
     res.statusCode = UNPROCESSABLE_ENTITY;
-    res.json({ error });
+    const {
+      body: { email: duplicateEmailAddress }
+    } = req;
+    const errors = {
+      account: { accountAlreadyExist: true, duplicateEmailAddress }
+    };
+    res.json({ errors });
   };
   const { body: params } = req;
   createResource(params, schema, model, successCb, errorCb, res);

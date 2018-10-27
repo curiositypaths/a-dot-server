@@ -74,15 +74,24 @@ const destroy = (req, res, next) => {
     const verifiedJwtToken = verifyJwtToken(jwtToken);
     const { sessionToken } = verifiedJwtToken;
 
-    model.destroy({ where: { sessionToken } }).then(numberOfRecordsDeleted => {
+    const handleDbResponse = numberOfRecordsDeleted => {
       if (numberOfRecordsDeleted === 1) {
         res.statusCode = HTTP_STATUS_CODES.NO_CONTENT;
-        res.send();
       } else {
         res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
-        res.send();
       }
-    });
+      res.send();
+    };
+
+    const handleDbRequestError = error => {
+      res.statusCode = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR;
+      res.send();
+    };
+
+    model
+      .destroy({ where: { sessionToken } })
+      .then(handleDbResponse)
+      .catch(handleDbRequestError);
   } catch (error) {
     res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
     res.send();

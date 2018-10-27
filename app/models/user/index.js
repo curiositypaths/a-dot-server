@@ -5,7 +5,7 @@ const {
   passwordLengthValidationParams,
   firstAndLastNameLengthValidationParams
 } = require("./validationParams");
-const { generateBcryptHash, isValidPassword } = require("./helpers");
+const { generateBcryptHash, isPasswordValid } = require("./helpers");
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
@@ -54,6 +54,6 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(Session, { as: "Sessions" });
   };
   // instance methods definitions
-  User.prototype.isValidPassword = isValidPassword;
+  User.prototype.isPasswordValid = isPasswordValid;
   return User;
 };

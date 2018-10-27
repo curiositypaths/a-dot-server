@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const passport = require("passport");
-const { mountLoginMiddleware } = require("../helpers/passport");
+const { mountLoginMiddleware } = require("../config/passport");
 const { usersRouterPrefix, usersRouter } = require("./users");
 const {
   routePrefix: sessionsRouterPrefix,

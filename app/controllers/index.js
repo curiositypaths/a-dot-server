@@ -5,14 +5,7 @@ const {
 
 const { CREATED, UNPROCESSABLE_ENTITY } = require("../helpers/httpStatusCodes");
 
-module.exports.createResource = (
-  params,
-  schema,
-  model,
-  successCb,
-  errorCb,
-  res
-) => {
+const createResource = (params, schema, model, successCb, errorCb, res) => {
   const { validatedParams, validationError } = validateParams(params, schema);
 
   const createResource = () => {
@@ -26,4 +19,8 @@ module.exports.createResource = (
   };
 
   !validationError ? createResource() : sendInvalidParamsResponse();
+};
+
+module.exports = {
+  createResource
 };

@@ -1,35 +1,41 @@
-const passport = require("passport");
-const { Strategy: LocalStrategy } = require("passport-local");
 const { User } = require("../models");
 
 const authenticateUser = async (email, password, done) => {
-  try {
-    const user = await User.findOne({ where: { email } });
+  let userInstance;
+
+  const findUser = email => User.findOne({ where: { email } });
+
+  const verifyUserExist = user => {
     if (!user) {
-      return done(null, false, { message: "User not found" });
+      throw "User not found";
     }
-    if (!(await user.isValidPassword(password))) {
-      return done(null, false, { message: "Wrong Password" });
+    userInstance = user;
+  };
+
+  const returnUserNotFound = () => {
+    done(true, false, { message: "User not found" });
+    // Mock invalid password to support the rest of the promise chain
+    return false;
+  };
+
+  const ifUserExistVerifyPassword = () =>
+    userInstance.isPasswordValid(password);
+
+  const verifyPasswordComparison = passwordIsValid => {
+    if (!passwordIsValid && userInstance) {
+      done(true, false, { message: "Wrong Password" });
+      throw "Password is not valid";
     }
-    return done(null, user, { message: "Logged in Successfully" });
-  } catch (error) {
-    return done(error);
-  }
+  };
+
+  const returnPositiveAuthentication = () =>
+    done(null, userInstance, { message: "Logged in Successfully" });
+
+  findUser(email)
+    .then(verifyUserExist)
+    .then(ifUserExistVerifyPassword, returnUserNotFound)
+    .then(verifyPasswordComparison)
+    .then(returnPositiveAuthentication);
 };
 
-const mountLoginMiddleware = () => {
-  passport.use(
-    "local",
-    new LocalStrategy(
-      {
-        usernameField: "email",
-        passwordField: "password"
-      },
-      authenticateUser
-    )
-  );
-};
-
-module.exports = {
-  mountLoginMiddleware
-};
+export { authenticateUser };

@@ -6,6 +6,6 @@ module.exports.generateBcryptHash = clearTextPassword => {
   return bcrypt.hashSync(clearTextPassword, bcryptSaltRounds);
 };
 
-module.exports.isValidPassword = function isValidPassword(clearTextPassword) {
-  return bcrypt.compareSync(clearTextPassword, this.password);
+module.exports.isPasswordValid = function isPasswordValid(clearTextPassword) {
+  return bcrypt.compare(clearTextPassword, this.password);
 };

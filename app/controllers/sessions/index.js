@@ -18,8 +18,8 @@ const create = (req, res, next) => {
 
   const successCb = () => {
     res.statusCode = CREATED;
-    const { user: userDbInstance } = req.verifyLoginCredentialsOutput;
-    const { firstName, lastName, email } = userDbInstance;
+    const { user: userInstance } = req.verifyLoginCredentialsOutput;
+    const { firstName, lastName, email } = userInstance;
     const user = {
       firstName,
       lastName,
@@ -42,25 +42,26 @@ const create = (req, res, next) => {
 const verifyLoginCredentials = (req, res, next) => {
   const { validatedParams, validationError } = validateParams(req.body, schema);
 
-  const sendInvalidParamsResponse = () => {
-    res.statusCode = UNPROCESSABLE_ENTITY;
-    res.json({ errors: formatSchemaValidationErrors(validationError) });
-  };
+  const returnedFailedAuthenticationNotice = () =>
+    res.json({ errors: { wasAuthenticationRequestSuccessful: false } });
 
   const authenticateCredentials = () =>
     passport.authenticate(
       "local",
       { failureRedirect: "/login" },
       (error, user, message) => {
-        req.verifyLoginCredentialsOutput = { error, user, message };
-        console.log(message);
-        next();
+        if (error) {
+          returnedFailedAuthenticationNotice();
+        } else {
+          req.verifyLoginCredentialsOutput = { error, user, message };
+          next();
+        }
       }
     )(req, res, next);
-
-  console.log(!validationError);
-
-  !validationError ? authenticateCredentials() : sendInvalidParamsResponse();
+  debugger;
+  !validationError
+    ? authenticateCredentials()
+    : returnedFailedAuthenticationNotice();
 };
 
 module.exports = {

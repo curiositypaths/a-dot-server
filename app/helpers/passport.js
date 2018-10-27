@@ -2,6 +2,7 @@ const { User } = require("../models");
 
 const authenticateUser = async (email, password, done) => {
   let userInstance;
+  let validPassword = false;
 
   const findUser = email => User.findOne({ where: { email } });
 
@@ -22,14 +23,19 @@ const authenticateUser = async (email, password, done) => {
     userInstance.isPasswordValid(password);
 
   const verifyPasswordComparison = passwordIsValid => {
+    validPassword = passwordIsValid;
+    // Check if user exist (userInstance) since a "User not found" would
+    // have been handled by the returnUserNotFound fn
     if (!passwordIsValid && userInstance) {
       done(true, false, { message: "Wrong Password" });
-      throw "Password is not valid";
     }
   };
 
-  const returnPositiveAuthentication = () =>
-    done(null, userInstance, { message: "Logged in Successfully" });
+  const returnPositiveAuthentication = () => {
+    if (userInstance && validPassword) {
+      done(null, userInstance, { message: "Logged in Successfully" });
+    }
+  };
 
   findUser(email)
     .then(verifyUserExist)

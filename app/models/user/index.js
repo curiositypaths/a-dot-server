@@ -38,9 +38,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           len: passwordLengthValidationParams
-        },
-        set(clearTextPassword) {
-          this.setDataValue("password", generateBcryptHash(clearTextPassword));
         }
       },
       createdAt: DataTypes.DATE,

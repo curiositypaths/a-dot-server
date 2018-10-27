@@ -1,6 +1,9 @@
 const { User: model } = require("../../models");
 const { createResource } = require("../");
 const HTTP_STATUS_CODES = require("../../helpers/httpStatusCodes");
+const { asyncGenerateBcryptHash } = require("../../models/user/helpers");
+const { password: passwordSchema } = require("../users/schemas");
+const { validateParams } = require("../../helpers/validators");
 
 const create = (req, res, next) => {
   const { create: schema } = require("./schemas");
@@ -36,7 +39,23 @@ const create = (req, res, next) => {
 
   const { body: params } = req;
 
-  createResource(params, schema, model, successCb, errorCb, res);
+  const { validatedParams, validationError } = validateParams(
+    params.password,
+    passwordSchema
+  );
+
+  if (!validationError) {
+    // Clear text passwords meets the requirements. Attempt to persist user
+    asyncGenerateBcryptHash(params.password, (err, hash) => {
+      params.password = hash;
+      createResource(params, schema, model, successCb, errorCb, res);
+    });
+  } else {
+    // Clear text passwords does not meet the requirements. Got ahead and forward
+    // request to createResource. It will fail but it will collect additional validation
+    // errors
+    createResource(params, schema, model, successCb, errorCb, res);
+  }
 };
 
 module.exports = {

@@ -11,7 +11,6 @@ const {
 const HTTP_STATUS_CODES = require("../../helpers/httpStatusCodes");
 
 const create = (req, res, next) => {
-  debugger;
   const { create: schema } = require("./schemas");
 
   const successCb = () => {

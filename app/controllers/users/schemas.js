@@ -19,9 +19,13 @@ module.exports.create = Joi.object().keys({
     .max(maxFirstAndLastNameLength)
     .required(),
   password: Joi.string()
-    .alphanum()
     .min(minPasswordLength)
     .max(maxPasswordLength)
     .required(),
   email: Joi.string().email({ minDomainAtoms: 2 })
 });
+
+module.exports.password = Joi.string()
+  .min(minPasswordLength)
+  .max(maxPasswordLength)
+  .required();

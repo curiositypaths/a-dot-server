@@ -38,9 +38,9 @@ const issueToken = ({ email: sub }) => {
   return { jwtToken, payload };
 };
 
-const parseJwtToken = jwtToken => jwt.verify(jwtToken, process.env.JWT_SECRET);
+const verifyJwtToken = jwtToken => jwt.verify(jwtToken, process.env.JWT_SECRET);
 
 module.exports = {
   issueToken,
-  parseJwtToken
+  verifyJwtToken
 };

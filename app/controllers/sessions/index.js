@@ -1,7 +1,7 @@
 const passport = require("passport");
 const { Session: model } = require("../../models");
 const { createResource } = require("../");
-const { issueToken } = require("../../helpers/jwt");
+const { issueToken, verifyJwtToken } = require("../../helpers/jwt");
 const { generateSessionParams } = require("./helpers");
 const { authenticate: schema } = require("./schemas");
 const {
@@ -9,6 +9,27 @@ const {
   formatSchemaValidationErrors
 } = require("../../helpers/validators");
 const HTTP_STATUS_CODES = require("../../helpers/httpStatusCodes");
+
+const verifyLoginCredentials = (req, res, next) => {
+  const { validatedParams, validationError } = validateParams(req.body, schema);
+
+  const returnedFailedAuthenticationNotice = () =>
+    res.json({ errors: { wasAuthenticationRequestSuccessful: false } });
+
+  const authenticateCredentials = () => {
+    passport.authenticate("local", {}, (error, user, message) => {
+      if (error) {
+        res.json({ errors: { wasAuthenticationRequestSuccessful: false } });
+      } else {
+        req.verifyLoginCredentialsOutput = { error, user, message };
+        next();
+      }
+    })(req, res, next);
+  };
+  !validationError
+    ? authenticateCredentials()
+    : returnedFailedAuthenticationNotice();
+};
 
 const create = (req, res, next) => {
   const { create: schema } = require("./schemas");
@@ -45,28 +66,32 @@ const create = (req, res, next) => {
   createResource(params, schema, model, successCb, errorCb, res);
 };
 
-const verifyLoginCredentials = (req, res, next) => {
-  const { validatedParams, validationError } = validateParams(req.body, schema);
+const destroy = (req, res, next) => {
+  const authorizationHeader = req.get("Authorization");
+  const jwtToken = authorizationHeader.slice(7);
+  const verifiedJwtToken = verifyJwtToken(jwtToken);
+  const { sessionToken } = verifiedJwtToken;
+  console.log("Session token is", sessionToken);
+  debugger;
 
-  const returnedFailedAuthenticationNotice = () =>
-    res.json({ errors: { wasAuthenticationRequestSuccessful: false } });
-
-  const authenticateCredentials = () => {
-    passport.authenticate("local", {}, (error, user, message) => {
-      if (error) {
-        res.json({ errors: { wasAuthenticationRequestSuccessful: false } });
-      } else {
-        req.verifyLoginCredentialsOutput = { error, user, message };
-        next();
-      }
-    })(req, res, next);
+  const successCb = () => {
+    debugger;
   };
-  !validationError
-    ? authenticateCredentials()
-    : returnedFailedAuthenticationNotice();
+
+  const errorCb = error => {
+    res.statusCode = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR;
+    res.json({
+      errors: {
+        wasSessionDestroyRequestSuccessful: false
+      }
+    });
+  };
+
+  debugger;
 };
 
 module.exports = {
   verifyLoginCredentials,
-  create
+  create,
+  destroy
 };

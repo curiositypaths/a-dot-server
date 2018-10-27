@@ -17,6 +17,7 @@ const create = (req, res, next) => {
   const { create: schema } = require("./schemas");
 
   const successCb = () => {
+    debugger;
     res.statusCode = CREATED;
     const { user: userDbInstance } = req.verifyLoginCredentialsOutput;
     const { firstName, lastName, email } = userDbInstance;
@@ -53,9 +54,12 @@ const verifyLoginCredentials = (req, res, next) => {
       { failureRedirect: "/login" },
       (error, user, message) => {
         req.verifyLoginCredentialsOutput = { error, user, message };
+        console.log(message);
         next();
       }
     )(req, res, next);
+
+  console.log(!validationError);
 
   !validationError ? authenticateCredentials() : sendInvalidParamsResponse();
 };

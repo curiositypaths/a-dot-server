@@ -39,7 +39,6 @@ module.exports = {
         }
       },
       {
-        paranoid: true,
         indexes: [
           {
             unique: true,

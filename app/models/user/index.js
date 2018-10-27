@@ -44,7 +44,9 @@ module.exports = (sequelize, DataTypes) => {
       updatedAt: DataTypes.DATE,
       deletedAt: DataTypes.DATE
     },
-    {}
+    {
+      paranoid: true
+    }
   );
   // associations setup
   User.associate = function({ User, Session }) {

@@ -69,25 +69,24 @@ const create = (req, res, next) => {
 const destroy = (req, res, next) => {
   const authorizationHeader = req.get("Authorization");
   const jwtToken = authorizationHeader.slice(7);
-  const verifiedJwtToken = verifyJwtToken(jwtToken);
-  const { sessionToken } = verifiedJwtToken;
-  console.log("Session token is", sessionToken);
-  debugger;
 
-  const successCb = () => {
-    debugger;
-  };
+  try {
+    const verifiedJwtToken = verifyJwtToken(jwtToken);
+    const { sessionToken } = verifiedJwtToken;
 
-  const errorCb = error => {
-    res.statusCode = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR;
-    res.json({
-      errors: {
-        wasSessionDestroyRequestSuccessful: false
+    model.destroy({ where: { sessionToken } }).then(numberOfRecordsDeleted => {
+      if (numberOfRecordsDeleted === 1) {
+        res.statusCode = HTTP_STATUS_CODES.NO_CONTENT;
+        res.send();
+      } else {
+        res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
+        res.send();
       }
     });
-  };
-
-  debugger;
+  } catch (error) {
+    res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
+    res.send();
+  }
 };
 
 module.exports = {

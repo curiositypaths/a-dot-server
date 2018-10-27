@@ -1,2 +1,6 @@
-module.exports.CREATED = 201;
-module.exports.UNPROCESSABLE_ENTITY = 422;
+const HTTP_STATUS_CODES = {
+  CREATED: 201,
+  UNPROCESSABLE_ENTITY: 422
+};
+
+module.exports = HTTP_STATUS_CODES;

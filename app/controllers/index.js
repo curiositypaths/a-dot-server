@@ -6,7 +6,6 @@ const {
 const HTTP_STATUS_CODES = require("../helpers/httpStatusCodes");
 
 const createResource = (params, schema, model, successCb, errorCb, res) => {
-  debugger;
   const { validatedParams, validationError } = validateParams(params, schema);
 
   const createResource = () => {

@@ -15,13 +15,18 @@ const HTTP_STATUS_CODES = require("../../helpers/httpStatusCodes");
 const verifyLoginCredentials = (req, res, next) => {
   const { validatedParams, validationError } = validateParams(req.body, schema);
 
-  const returnedFailedAuthenticationNotice = () =>
-    res.json({ errors: { wasAuthenticationRequestSuccessful: false } });
+  const returnedFailedAuthenticationNotice = () => {
+    res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
+    res.json({
+      error: true,
+      errorDetails: { createSession: "Invalid credentials" }
+    });
+  };
 
   const authenticateCredentials = () => {
     passport.authenticate("local", {}, (error, user, message) => {
       if (error) {
-        res.json({ errors: { wasAuthenticationRequestSuccessful: false } });
+        returnedFailedAuthenticationNotice();
       } else {
         req.verifyLoginCredentialsOutput = { error, user, message };
         next();

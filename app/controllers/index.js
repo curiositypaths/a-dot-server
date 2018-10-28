@@ -15,7 +15,10 @@ const createResource = (params, schema, model, successCb, errorCb, res) => {
 
   const sendInvalidParamsResponse = () => {
     res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
-    res.json({ errors: formatSchemaValidationErrors(validationError) });
+    res.json({
+      error: true,
+      details: formatSchemaValidationErrors(validationError)
+    });
   };
 
   !validationError ? createResource() : sendInvalidParamsResponse();

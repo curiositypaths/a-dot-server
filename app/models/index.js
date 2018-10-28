@@ -16,9 +16,6 @@ const modelsToLoad = ["user", "session"];
 const db = {};
 const sequelize = new Sequelize(config);
 
-// const capitalizeModelName = modelName =>
-//   modelName.charAt(0).toUpperCase() + modelName.slice(1);
-
 const requireSequelizeModel = sequelizeModelName =>
   require(`./${sequelizeModelName}/`);
 

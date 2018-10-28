@@ -27,15 +27,11 @@ const cleanMessage = msg =>
   msg.replace(findValuesBetweenDoubleQuotes, "").trim();
 
 const formatSchemaValidationErrors = ({ details: errorsDetails }) => {
-  return errorsDetails.reduce((msg, validationError) => {
+  return errorsDetails.reduce((container, validationError) => {
     const paramName = validationError.path[0];
-    if (msg[paramName]) {
-      msg[paramName].push(cleanMessage(validationError.message));
-    } else {
-      msg[paramName] = [cleanMessage(validationError.message)];
-    }
-    return msg;
-  }, {});
+    container.push({ [paramName]: cleanMessage(validationError.message) });
+    return container;
+  }, []);
 };
 
 module.exports = {

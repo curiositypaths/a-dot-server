@@ -10,31 +10,31 @@ const create = (req, res, next) => {
 
   const successCb = user => {
     res.statusCode = HTTP_STATUS_CODES.CREATED;
-    req.verifyLoginCredentialsOutput = { error: null, user, message: null };
+    req.verifyLoginCredentialsOutput = { error: null, user };
     next();
   };
 
   const isEmailValidationError = error =>
     error.name === "SequelizeUniqueConstraintError" &&
-    error.original.constraint === "Users_email_key";
+    error.original.constraint === "users_email_key";
 
   const errorCb = error => {
     res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
-    let errors;
+    let errorDetails = [];
     if (isEmailValidationError(error)) {
-      errors = {
-        account: {
-          accountAlreadyExist: true,
-          duplicateEmailAddress: req.body.email
+      console.log("Duplicate");
+      errorDetails = [
+        {
+          createAccountRequest: {
+            accountAlreadyExist: true,
+            duplicateEmailAddress: req.body.email
+          }
         }
-      };
+      ];
     } else {
-      errors = {
-        wasAccountCreationRequestSuccessful: false
-      };
+      res.statusCode = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR;
     }
-
-    res.json({ errors });
+    res.json({ error: true, errorDetails });
   };
 
   const { body: params } = req;
@@ -45,15 +45,15 @@ const create = (req, res, next) => {
   );
 
   if (!validationError) {
-    // Clear text passwords meets the requirements. Attempt to persist user
+    // Clear text passwords meets validation requirements. Attempt to persist user
     asyncGenerateBcryptHash(params.password, (err, hash) => {
       params.password = hash;
       createResource(params, schema, model, successCb, errorCb, res);
     });
   } else {
-    // Clear text passwords does not meet the requirements. Got ahead and forward
-    // request to createResource. It will fail but it will collect additional validation
-    // errors
+    // Clear text passwords does not meet validation requirements. Got ahead and forward
+    // request to createResource. The createResource error handling will handle the error
+    // but will also add validation errors for other fields in it's response
     createResource(params, schema, model, successCb, errorCb, res);
   }
 };

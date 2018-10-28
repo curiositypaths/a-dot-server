@@ -66,6 +66,44 @@ const create = (req, res, next) => {
   createResource(params, schema, model, successCb, errorCb, res);
 };
 
+const validateToken = (req, res, next) => {
+  const authorizationHeader = req.get("Authorization");
+  const jwtToken = authorizationHeader.slice(7);
+
+  try {
+    const verifiedJwtToken = verifyJwtToken(jwtToken);
+    const { sessionToken } = verifiedJwtToken;
+
+    if (Date.now() >= verifiedJwtToken.exp) {
+      res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
+      res.send();
+    } else {
+      const handleDbResponse = session => {
+        if (session) {
+          res.statusCode = HTTP_STATUS_CODES.NO_CONTENT;
+          res.send();
+        } else {
+          res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
+          res.send();
+        }
+      };
+
+      const handleDbRequestError = error => {
+        res.statusCode = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR;
+        res.send();
+      };
+
+      model
+        .findOne({ where: { sessionToken } })
+        .then(handleDbResponse)
+        .catch(handleDbRequestError);
+    }
+  } catch (error) {
+    res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
+    res.send();
+  }
+};
+
 const destroy = (req, res, next) => {
   const authorizationHeader = req.get("Authorization");
   const jwtToken = authorizationHeader.slice(7);
@@ -101,5 +139,6 @@ const destroy = (req, res, next) => {
 module.exports = {
   verifyLoginCredentials,
   create,
-  destroy
+  destroy,
+  validateToken
 };

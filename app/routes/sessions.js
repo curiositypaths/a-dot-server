@@ -2,6 +2,7 @@ const express = require("express");
 const {
   verifyLoginCredentials,
   create,
+  validateToken,
   destroy
 } = require("../controllers/sessions/");
 
@@ -13,6 +14,8 @@ router
   .post(verifyLoginCredentials)
   .post(create)
   .delete(destroy);
+
+router.route("/validator").post(validateToken);
 
 module.exports = {
   routePrefix,

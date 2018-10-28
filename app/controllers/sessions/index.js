@@ -1,5 +1,6 @@
 const passport = require("passport");
 const { Session: model } = require("../../models");
+const { User } = require("../../models");
 const { createResource } = require("../");
 const { issueToken, verifyJwtToken } = require("../../helpers/jwt");
 const { generateSessionParams } = require("./helpers");
@@ -8,6 +9,7 @@ const {
   validateParams,
   formatSchemaValidationErrors
 } = require("../../helpers/validators");
+const Sequelize = require("sequelize");
 const HTTP_STATUS_CODES = require("../../helpers/httpStatusCodes");
 
 const verifyLoginCredentials = (req, res, next) => {
@@ -67,18 +69,23 @@ const create = (req, res, next) => {
 };
 
 const validateToken = (req, res, next) => {
+  debugger;
   const authorizationHeader = req.get("Authorization");
   const jwtToken = authorizationHeader.slice(7);
 
   try {
+    debugger;
     const verifiedJwtToken = verifyJwtToken(jwtToken);
     const { sessionToken } = verifiedJwtToken;
-
+    debugger;
     if (Date.now() >= verifiedJwtToken.exp) {
+      debugger;
       res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
       res.send();
     } else {
-      const handleDbResponse = session => {
+      debugger;
+      const handleDbResponse = (session, u) => {
+        debugger;
         if (session) {
           res.statusCode = HTTP_STATUS_CODES.NO_CONTENT;
           res.send();
@@ -89,16 +96,21 @@ const validateToken = (req, res, next) => {
       };
 
       const handleDbRequestError = error => {
+        debugger;
         res.statusCode = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR;
         res.send();
       };
-
+      debugger;
       model
-        .findOne({ where: { sessionToken } })
+        .findOne({
+          where: { sessionToken },
+          includes: [{ model: User }]
+        })
         .then(handleDbResponse)
         .catch(handleDbRequestError);
     }
   } catch (error) {
+    debugger;
     res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
     res.send();
   }

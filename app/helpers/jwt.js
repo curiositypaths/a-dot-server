@@ -8,7 +8,7 @@ const audience = "http://web.adot.app"; // https://tools.ietf.org/html/rfc7519#s
 const issuer = "http://api.adot.app"; // https://tools.ietf.org/html/rfc7519#section-4.1.1
 // subject https://tools.ietf.org/html/rfc7519#section-4.1.2
 const notBefore = "1ms";
-const tokenDuration = 86400; // One day in epoch time
+const tokenDuration = 86400 * 1000; // One day in milliseconds
 
 const tokenValidityValues = () => {
   const nowInEpochTime = Date.now().valueOf();

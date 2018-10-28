@@ -69,26 +69,22 @@ const create = (req, res, next) => {
 };
 
 const validateToken = (req, res, next) => {
-  debugger;
   const authorizationHeader = req.get("Authorization");
   const jwtToken = authorizationHeader.slice(7);
 
   try {
-    debugger;
     const verifiedJwtToken = verifyJwtToken(jwtToken);
     const { sessionToken } = verifiedJwtToken;
-    debugger;
+
     if (Date.now() >= verifiedJwtToken.exp) {
-      debugger;
       res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
       res.send();
     } else {
-      debugger;
-      const handleDbResponse = (session, u) => {
-        debugger;
+      const handleDbResponse = session => {
         if (session) {
-          res.statusCode = HTTP_STATUS_CODES.NO_CONTENT;
-          res.send();
+          const { firstName, lastName, email } = session.User;
+          res.statusCode = HTTP_STATUS_CODES.OK;
+          res.json({ firstName, lastName, email });
         } else {
           res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
           res.send();
@@ -96,21 +92,18 @@ const validateToken = (req, res, next) => {
       };
 
       const handleDbRequestError = error => {
-        debugger;
         res.statusCode = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR;
         res.send();
       };
-      debugger;
       model
         .findOne({
           where: { sessionToken },
-          includes: [{ model: User }]
+          include: [{ model: User }]
         })
         .then(handleDbResponse)
         .catch(handleDbRequestError);
     }
   } catch (error) {
-    debugger;
     res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
     res.send();
   }

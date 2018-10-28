@@ -4,7 +4,7 @@ const { maxSessionTokenLength } = require("./validationParams");
 
 module.exports = (sequelize, DataTypes) => {
   const Session = sequelize.define(
-    "Session",
+    "session",
     {
       sessionToken: {
         type: DataTypes.STRING(maxSessionTokenLength),
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false
       },
-      UserId: {
+      userId: {
         type: DataTypes.INTEGER,
         allowNull: false
       },
@@ -29,8 +29,8 @@ module.exports = (sequelize, DataTypes) => {
       paranoid: true
     }
   );
-  Session.associate = function({ User, Session }) {
-    Session.belongsTo(User);
+  Session.associate = function({ user, session }) {
+    session.belongsTo(user);
   };
   return Session;
 };

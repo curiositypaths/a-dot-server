@@ -9,7 +9,7 @@ const { generateBcryptHash, isPasswordValid } = require("./helpers");
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-    "User",
+    "user",
     {
       firstName: {
         type: DataTypes.STRING(maxFirstAndLastNameLength),
@@ -49,8 +49,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   // associations setup
-  User.associate = function({ User, Session }) {
-    User.hasMany(Session, { as: "Sessions" });
+  User.associate = function({ user, session }) {
+    user.hasMany(session, { as: "sessions" });
   };
   // instance methods definitions
   User.prototype.isPasswordValid = isPasswordValid;

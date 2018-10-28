@@ -8,7 +8,7 @@ const {
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable(
-      "Users",
+      "users",
       {
         id: {
           allowNull: false,
@@ -56,6 +56,6 @@ module.exports = {
     );
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("Users");
+    return queryInterface.dropTable("users");
   }
 };

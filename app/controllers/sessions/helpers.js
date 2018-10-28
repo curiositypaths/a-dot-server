@@ -1,8 +1,8 @@
 module.exports.generateSessionParams = (
-  { id: UserId },
+  { id: userId },
   { sessionToken, iat: issuedAt, exp: expiresAt }
 ) => ({
-  UserId,
+  userId,
   sessionToken,
   issuedAt,
   expiresAt

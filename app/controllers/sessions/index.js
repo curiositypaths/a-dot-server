@@ -1,6 +1,6 @@
 const passport = require("passport");
-const { Session: model } = require("../../models");
-const { User } = require("../../models");
+const { session: model } = require("../../models");
+const { user } = require("../../models");
 const { createResource } = require("../");
 const { issueToken, verifyJwtToken } = require("../../helpers/jwt");
 const { generateSessionParams } = require("./helpers");
@@ -82,7 +82,7 @@ const validateToken = (req, res, next) => {
     } else {
       const handleDbResponse = session => {
         if (session) {
-          const { firstName, lastName, email } = session.User;
+          const { firstName, lastName, email } = session.user;
           res.statusCode = HTTP_STATUS_CODES.OK;
           res.json({ firstName, lastName, email });
         } else {
@@ -98,7 +98,7 @@ const validateToken = (req, res, next) => {
       model
         .findOne({
           where: { sessionToken },
-          include: [{ model: User }]
+          include: [{ model: user }]
         })
         .then(handleDbResponse)
         .catch(handleDbRequestError);

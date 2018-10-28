@@ -1,4 +1,4 @@
-const { User: model } = require("../../models");
+const { user: model } = require("../../models");
 const { createResource } = require("../");
 const HTTP_STATUS_CODES = require("../../helpers/httpStatusCodes");
 const { asyncGenerateBcryptHash } = require("../../models/user/helpers");

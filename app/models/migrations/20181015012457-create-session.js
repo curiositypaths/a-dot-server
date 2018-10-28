@@ -5,7 +5,7 @@ const { maxSessionTokenLength } = require("../session/validationParams");
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable(
-      "Sessions",
+      "sessions",
       {
         id: {
           allowNull: false,
@@ -25,7 +25,7 @@ module.exports = {
           type: Sequelize.DATE,
           allowNull: false
         },
-        UserId: {
+        userId: {
           type: Sequelize.INTEGER,
           allowNull: false
         },
@@ -49,6 +49,6 @@ module.exports = {
     );
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("Sessions");
+    return queryInterface.dropTable("sessions");
   }
 };

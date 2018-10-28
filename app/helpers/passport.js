@@ -1,10 +1,10 @@
-const { User } = require("../models");
+const { user } = require("../models");
 
 const authenticateUser = async (email, password, done) => {
   let userInstance;
   let validPassword = false;
 
-  const findUser = email => User.findOne({ where: { email } });
+  const findUser = email => user.findOne({ where: { email } });
 
   const verifyUserExist = user => {
     if (!user) {

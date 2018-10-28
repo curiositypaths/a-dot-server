@@ -16,15 +16,15 @@ const modelsToLoad = ["user", "session"];
 const db = {};
 const sequelize = new Sequelize(config);
 
-const capitalizeModelName = modelName =>
-  modelName.charAt(0).toUpperCase() + modelName.slice(1);
+// const capitalizeModelName = modelName =>
+//   modelName.charAt(0).toUpperCase() + modelName.slice(1);
 
 const requireSequelizeModel = sequelizeModelName =>
   require(`./${sequelizeModelName}/`);
 
 const instantiateSequelizeModel = module => {
   const model = module(sequelize, Sequelize, config);
-  db[capitalizeModelName(model.name)] = model;
+  db[model.name] = model;
 };
 
 const loadModules = () => {

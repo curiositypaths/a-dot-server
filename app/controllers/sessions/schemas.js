@@ -18,7 +18,7 @@ const authenticate = Joi.object().keys({
 });
 
 const create = Joi.object().keys({
-  UserId: Joi.number()
+  userId: Joi.number()
     .integer()
     .required(),
   sessionToken: Joi.string()

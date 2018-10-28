@@ -11,7 +11,7 @@ const corsOptions = {
   optionsSuccessStatus: 200 // some legacy browsers choke on 204
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(apiRouterPrefix, apiRouter);
 
 module.exports = app;

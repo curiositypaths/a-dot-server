@@ -14,6 +14,7 @@ const HTTP_STATUS_CODES = require("../../helpers/httpStatusCodes");
 const {
   skipSessionAuthenticationWhiteList
 } = require("../../config/skipSessionAuthenticationWhiteList");
+const { create: createJSONView } = require("../../views/sessions");
 
 const verifyLoginCredentials = (req, res, next) => {
   const { validatedParams, validationError } = validateParams(req.body, schema);
@@ -47,13 +48,11 @@ const create = (req, res, next) => {
   const successCb = () => {
     res.statusCode = HTTP_STATUS_CODES.CREATED;
     const { user: userInstance } = req.verifyLoginCredentialsOutput;
-    const { firstName, lastName, email } = userInstance;
-    const user = {
-      firstName,
-      lastName,
-      email
+    const viewData = {
+      user,
+      jwtToken
     };
-    res.json({ jwtToken, user });
+    res.json(createJSONView(viewData));
   };
 
   const errorCb = error => {

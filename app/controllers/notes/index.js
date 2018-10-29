@@ -87,7 +87,6 @@ const read = (req, res, next) => {
 
   const { publicId } = req.params;
   try {
-    // Clear text passwords meets validation requirements. Attempt to persist user
     note
       .findOne({
         where: { publicId },

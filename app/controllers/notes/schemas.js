@@ -17,6 +17,14 @@ const create = Joi.object().keys({
     .max(maxTitleLength)
 });
 
+const update = Joi.object().keys({
+  noteId: Joi.number()
+    .integer()
+    .required(),
+  body: Joi.string().required()
+});
+
 module.exports = {
-  create
+  create,
+  update
 };

@@ -18,7 +18,7 @@ const apiRouter = express.Router();
 
 const corsOptions = {
   origin: process.env.WEB_CLIENT_ADDRESS,
-  methods: ["GET", "POST", "PATCH", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   "Access-Control-Max-Age": 600,
   optionsSuccessStatus: 200 // some legacy browsers choke on 204
 };

@@ -24,7 +24,14 @@ const update = Joi.object().keys({
   body: Joi.string().required()
 });
 
+const read = Joi.object().keys({
+  noteId: Joi.number()
+    .integer()
+    .required()
+});
+
 module.exports = {
   create,
-  update
+  update,
+  read
 };

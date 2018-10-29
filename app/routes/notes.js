@@ -11,11 +11,12 @@ const router = express.Router();
 
 router.use(authenticateSession);
 
-router.post("/", createNote);
-router.put("/", updateNote);
-router.get("/:publicId", readNote);
+router.route("/").post(createNote);
 
-//router.get("/:publicId", readNote);
+router
+  .route("/:publicId")
+  .get(readNote)
+  .put(updateNote);
 
 module.exports = {
   routePrefix,

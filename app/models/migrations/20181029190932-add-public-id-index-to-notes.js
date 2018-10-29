@@ -3,7 +3,8 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     queryInterface.addIndex("notes", ["publicId"], {
-      indexName: "notes_publicId"
+      indexName: "notes_publicId",
+      indicesType: "UNIQUE"
     });
   },
 

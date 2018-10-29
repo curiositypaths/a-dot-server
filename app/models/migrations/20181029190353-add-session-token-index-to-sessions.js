@@ -3,7 +3,8 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     queryInterface.addIndex("sessions", ["sessionToken"], {
-      indexName: "sessions_sessionToken"
+      indexName: "sessions_sessionToken",
+      indicesType: "UNIQUE"
     });
   },
 

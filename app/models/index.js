@@ -11,7 +11,7 @@ const config = dbConfigs[appEnvironment];
 
 // Add models to be loaded here. The value in the array must match the name of the model parent directory.
 // The model core logic should be in an index.js file
-const modelsToLoad = ["user", "session"];
+const modelsToLoad = ["user", "session", "note"];
 
 const db = {};
 const sequelize = new Sequelize(config);

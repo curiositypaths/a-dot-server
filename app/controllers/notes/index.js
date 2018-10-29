@@ -69,7 +69,53 @@ const update = (req, res, next) => {
     res.json({ error: true, errorDetails: error });
   }
 };
+
+const read = (req, res, next) => {
+  const { read: schema } = require("./schemas");
+
+  const successCb = note => {
+    res.statusCode = HTTP_STATUS_CODES.CREATED;
+    res.json({ error: null, note });
+  };
+
+  const errorCb = error => {
+    res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
+    let errorDetails = [];
+    // Need to replace with errors details
+    res.json({ error: true, errorDetails: error });
+  };
+
+  const { publicId } = req.params;
+  try {
+    // Clear text passwords meets validation requirements. Attempt to persist user
+    note
+      .findOne({
+        where: { publicId },
+        include: [
+          {
+            model: revisionModel,
+            as: "revisions",
+            limit: 1,
+            order: [["createdAt", "DESC"]]
+          }
+        ]
+      })
+      .then(note => {
+        const { title, publicId } = note;
+        const [lastNoteRevision] = note.revisions;
+        const { body } = lastNoteRevision;
+        res.json({ error: true, title, publicId, body });
+      });
+  } catch (error) {
+    res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
+    let errorDetails = [];
+    // Need to replace with errors details
+    res.json({ error: true, errorDetails: error });
+  }
+};
+
 module.exports = {
   create,
-  update
+  update,
+  read
 };

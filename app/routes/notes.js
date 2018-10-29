@@ -2,17 +2,20 @@ const express = require("express");
 const { authenticateSession } = require("../controllers/sessions/");
 const {
   create: createNote,
-  update: updateNote
+  update: updateNote,
+  read: readNote
 } = require("../controllers/notes");
 
 const routePrefix = "/notes";
 const router = express.Router();
 
-router
-  .route("/")
-  .post(authenticateSession)
-  .post(createNote)
-  .put(updateNote);
+router.use(authenticateSession);
+
+router.post("/", createNote);
+router.put("/", updateNote);
+router.get("/:publicId", readNote);
+
+//router.get("/:publicId", readNote);
 
 module.exports = {
   routePrefix,

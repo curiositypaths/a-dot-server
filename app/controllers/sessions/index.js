@@ -74,10 +74,9 @@ const create = (req, res, next) => {
 };
 
 const validateToken = (req, res, next) => {
-  const authorizationHeader = req.get("Authorization");
-  const jwtToken = authorizationHeader.slice(7);
-
   try {
+    const authorizationHeader = req.get("Authorization");
+    const jwtToken = authorizationHeader.slice(7);
     const verifiedJwtToken = verifyJwtToken(jwtToken);
     const { sessionToken } = verifiedJwtToken;
 
@@ -90,6 +89,45 @@ const validateToken = (req, res, next) => {
           const { firstName, lastName, email } = session.user;
           res.statusCode = HTTP_STATUS_CODES.OK;
           res.json({ firstName, lastName, email });
+        } else {
+          res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
+          res.send();
+        }
+      };
+
+      const handleDbRequestError = error => {
+        res.statusCode = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR;
+        res.send();
+      };
+      model
+        .findOne({
+          where: { sessionToken },
+          include: [{ model: user }]
+        })
+        .then(handleDbResponse)
+        .catch(handleDbRequestError);
+    }
+  } catch (error) {
+    res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
+    res.send();
+  }
+};
+
+const authenticateSession = (req, res, next) => {
+  try {
+    const authorizationHeader = req.get("Authorization");
+    const jwtToken = authorizationHeader.slice(7);
+    const verifiedJwtToken = verifyJwtToken(jwtToken);
+    const { sessionToken } = verifiedJwtToken;
+
+    if (Date.now() >= verifiedJwtToken.exp) {
+      res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
+      res.send();
+    } else {
+      const handleDbResponse = session => {
+        if (session) {
+          req.user = session.user;
+          next();
         } else {
           res.statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
           res.send();
@@ -150,5 +188,6 @@ module.exports = {
   verifyLoginCredentials,
   create,
   destroy,
-  validateToken
+  validateToken,
+  authenticateSession
 };

@@ -5,6 +5,10 @@ const cors = require("cors");
 const { mountLoginMiddleware } = require("../config/passport");
 const { usersRouterPrefix, usersRouter } = require("./users");
 const {
+  routePrefix: notesRouterPrefix,
+  router: notesRouter
+} = require("./notes");
+const {
   routePrefix: sessionsRouterPrefix,
   router: sessionsRouter
 } = require("./sessions");
@@ -25,6 +29,7 @@ apiRouter.use(bodyParser.json());
 apiRouter.use(passport.initialize()) && mountLoginMiddleware();
 apiRouter.use(usersRouterPrefix, usersRouter);
 apiRouter.use(sessionsRouterPrefix, sessionsRouter);
+apiRouter.use(notesRouterPrefix, notesRouter);
 
 module.exports = {
   apiRouter,

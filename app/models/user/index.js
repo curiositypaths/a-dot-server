@@ -49,8 +49,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   // associations setup
-  User.associate = function({ user, session }) {
+  User.associate = function({ user, session, note }) {
     user.hasMany(session, { as: "sessions" });
+    user.hasMany(note, { as: "notes" });
   };
   // instance methods definitions
   User.prototype.isPasswordValid = isPasswordValid;

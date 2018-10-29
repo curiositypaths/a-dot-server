@@ -1,15 +1,16 @@
 const { note } = require("../../models");
 const nanoIdCustomGenerator = require("nanoid/generate");
-const { note: model, revision: revisionModel } = require("../../models");
+const { note: noteModel, revision: revisionModel } = require("../../models");
 const {
   publicIdAlphabet,
   publicIdTokenLength
 } = require("../../models/note/validationParams");
 const { createResource } = require("../");
 const HTTP_STATUS_CODES = require("../../helpers/httpStatusCodes");
+const schemas = require("./schemas");
 
 const create = (req, res, next) => {
-  const { create: schema } = require("./schemas");
+  const schema = schemas.create;
 
   const successCb = note => {
     res.statusCode = HTTP_STATUS_CODES.CREATED;
@@ -17,14 +18,16 @@ const create = (req, res, next) => {
   };
 
   const errorCb = error => {
+    // Review for error handling logic and consider adding a hook
     res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
     let errorDetails = [];
     // Need to replace with errors details
-    res.json({ error: true, errorDetails: error });
+    res.json({ error: true, errorDetails: errorDetails });
   };
 
   const { body: params } = req;
-  params.userId = req.user.id;
+  const { user: userAssociatedToTheRequest } = req;
+  params.userId = userAssociatedToTheRequest.id;
 
   // https://github.com/ai/nanoid#custom-alphabet-or-length
   params.publicId = nanoIdCustomGenerator(
@@ -32,14 +35,14 @@ const create = (req, res, next) => {
     publicIdTokenLength
   );
 
-  createResource(params, schema, model, successCb, errorCb, res);
+  createResource(params, schema, noteModel, successCb, errorCb, res);
 };
 module.exports = {
   create
 };
 
 const update = (req, res, next) => {
-  const { update: schema } = require("./schemas");
+  const schema = schemas.update;
 
   const successCb = revision => {
     res.statusCode = HTTP_STATUS_CODES.CREATED;
@@ -47,31 +50,34 @@ const update = (req, res, next) => {
   };
 
   const errorCb = error => {
+    // Review for error handling logic and consider adding a hook
     res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
     let errorDetails = [];
     // Need to replace with errors details
-    res.json({ error: true, errorDetails: error });
+    res.json({ error: true, errorDetails: errorDetails });
   };
 
-  const { body: params } = req;
-
   try {
-    // Clear text passwords meets validation requirements. Attempt to persist user
-    const { publicId } = params;
+    const { body: params } = req;
+    const {
+      params: { publicId }
+    } = req;
     note.findOne({ where: { publicId } }).then(note => {
+      // required to associated the new revision (new note body) to the note
       params.noteId = note.id;
       createResource(params, schema, revisionModel, successCb, errorCb, res);
     });
   } catch (error) {
-    res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
+    // Review for error handling logic and consider adding a hook
+    res.statusCode = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR;
     let errorDetails = [];
     // Need to replace with errors details
-    res.json({ error: true, errorDetails: error });
+    res.send();
   }
 };
 
 const read = (req, res, next) => {
-  const { read: schema } = require("./schemas");
+  const read = schemas.read;
 
   const successCb = note => {
     res.statusCode = HTTP_STATUS_CODES.CREATED;
@@ -79,14 +85,15 @@ const read = (req, res, next) => {
   };
 
   const errorCb = error => {
+    // Review for error handling logic and consider adding a hook
     res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
     let errorDetails = [];
     // Need to replace with errors details
-    res.json({ error: true, errorDetails: error });
+    res.json({ error: true, errorDetails: errorDetails });
   };
 
-  const { publicId } = req.params;
   try {
+    const { publicId } = req.params;
     note
       .findOne({
         where: { publicId },
@@ -103,13 +110,19 @@ const read = (req, res, next) => {
         const { title, publicId } = note;
         const [lastNoteRevision] = note.revisions;
         const { body } = lastNoteRevision;
-        res.json({ error: true, title, publicId, body });
+        res.json({
+          error: true,
+          title,
+          publicId,
+          body
+        });
       });
   } catch (error) {
-    res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
+    // Review for error handling logic and consider adding a hook
+    res.statusCode = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR;
     let errorDetails = [];
     // Need to replace with errors details
-    res.json({ error: true, errorDetails: error });
+    res.json({ error: true, errorDetails: errorDetails });
   }
 };
 

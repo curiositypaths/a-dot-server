@@ -1,6 +1,9 @@
 const express = require("express");
 const { authenticateSession } = require("../controllers/sessions/");
-const { create: createNote } = require("../controllers/notes");
+const {
+  create: createNote,
+  update: updateNote
+} = require("../controllers/notes");
 
 const routePrefix = "/notes";
 const router = express.Router();
@@ -8,7 +11,8 @@ const router = express.Router();
 router
   .route("/")
   .post(authenticateSession)
-  .post(createNote);
+  .post(createNote)
+  .put(updateNote);
 
 module.exports = {
   routePrefix,

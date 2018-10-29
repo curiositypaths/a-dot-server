@@ -24,8 +24,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Note.associate = function({ user, note }) {
+  Note.associate = function({ user, note, revision }) {
     note.belongsTo(user);
+    note.hasMany(revision, { as: "revisions" });
   };
   return Note;
 };

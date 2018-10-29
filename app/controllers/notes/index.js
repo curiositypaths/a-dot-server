@@ -1,6 +1,6 @@
 const { note } = require("../../models");
 const nanoIdCustomGenerator = require("nanoid/generate");
-const { note: model } = require("../../models");
+const { note: model, revision: revisionModel } = require("../../models");
 const {
   publicIdAlphabet,
   publicIdTokenLength
@@ -19,6 +19,7 @@ const create = (req, res, next) => {
   const errorCb = error => {
     res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
     let errorDetails = [];
+    // Need to replace with errors details
     res.json({ error: true, errorDetails: error });
   };
 
@@ -35,4 +36,40 @@ const create = (req, res, next) => {
 };
 module.exports = {
   create
+};
+
+const update = (req, res, next) => {
+  const { update: schema } = require("./schemas");
+
+  const successCb = revision => {
+    res.statusCode = HTTP_STATUS_CODES.CREATED;
+    res.json({ error: null, revision });
+  };
+
+  const errorCb = error => {
+    res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
+    let errorDetails = [];
+    // Need to replace with errors details
+    res.json({ error: true, errorDetails: error });
+  };
+
+  const { body: params } = req;
+
+  try {
+    // Clear text passwords meets validation requirements. Attempt to persist user
+    const { publicId } = params;
+    note.findOne({ where: { publicId } }).then(note => {
+      params.noteId = note.id;
+      createResource(params, schema, revisionModel, successCb, errorCb, res);
+    });
+  } catch (error) {
+    res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
+    let errorDetails = [];
+    // Need to replace with errors details
+    res.json({ error: true, errorDetails: error });
+  }
+};
+module.exports = {
+  create,
+  update
 };

@@ -2,16 +2,16 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const cors = require("cors");
+const { applySessionAuthenticationRules } = require("../controllers/sessions");
 const { mountLoginMiddleware } = require("../config/passport");
-const { usersRouterPrefix, usersRouter } = require("./users");
+const { usersRouter } = require("./users");
 const {
-  routePrefix: notesRouterPrefix,
-  router: notesRouter
-} = require("./notes");
-const {
-  routePrefix: sessionsRouterPrefix,
-  router: sessionsRouter
-} = require("./sessions");
+  usersRouterPrefix,
+  sessionsRouterPrefix,
+  notesRouterPrefix
+} = require("./routePrefixes");
+const { router: notesRouter } = require("./notes");
+const { router: sessionsRouter } = require("./sessions");
 
 const apiRouterPrefix = "/api/v1";
 const apiRouter = express.Router();
@@ -26,12 +26,12 @@ const corsOptions = {
 apiRouter.use(cors(corsOptions));
 
 apiRouter.use(bodyParser.json());
+apiRouter.use(applySessionAuthenticationRules);
 apiRouter.use(passport.initialize()) && mountLoginMiddleware();
 apiRouter.use(usersRouterPrefix, usersRouter);
 apiRouter.use(sessionsRouterPrefix, sessionsRouter);
 apiRouter.use(notesRouterPrefix, notesRouter);
 
 module.exports = {
-  apiRouter,
-  apiRouterPrefix
+  apiRouter
 };

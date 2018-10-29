@@ -6,7 +6,6 @@ const {
   destroy: destroySession
 } = require("../controllers/sessions/");
 
-const routePrefix = "/sessions";
 const router = express.Router();
 
 router
@@ -18,6 +17,5 @@ router
 router.route("/validator").post(validateToken);
 
 module.exports = {
-  routePrefix,
   router
 };

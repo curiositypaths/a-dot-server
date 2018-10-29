@@ -22,7 +22,6 @@ const create = (req, res, next) => {
     res.statusCode = HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
     let errorDetails = [];
     if (isEmailValidationError(error)) {
-      console.log("Duplicate");
       errorDetails = [
         {
           createAccountRequest: {

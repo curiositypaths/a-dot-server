@@ -1,5 +1,6 @@
 const express = require("express");
-const { apiRouterPrefix, apiRouter } = require("./routes/api");
+const { apiRouterPrefix } = require("./routes/routePrefixes");
+const { apiRouter } = require("./routes/api");
 
 const app = express();
 

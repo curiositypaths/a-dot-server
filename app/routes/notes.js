@@ -1,15 +1,15 @@
 const express = require("express");
-const { authenticateSession } = require("../controllers/sessions/");
+//const { authenticateSession } = require("../controllers/sessions/");
 const {
   create: createNote,
   update: updateNote,
   read: readNote
 } = require("../controllers/notes");
 
-const routePrefix = "/notes";
 const router = express.Router();
 
-router.use(authenticateSession);
+// Disabled while evaluating a white list approach for session authentication
+// router.use(authenticateSession);
 
 router.route("/").post(createNote);
 
@@ -19,6 +19,5 @@ router
   .put(updateNote);
 
 module.exports = {
-  routePrefix,
   router
 };

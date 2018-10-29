@@ -11,6 +11,9 @@ const {
 } = require("../../helpers/validators");
 const Sequelize = require("sequelize");
 const HTTP_STATUS_CODES = require("../../helpers/httpStatusCodes");
+const {
+  skipSessionAuthenticationWhiteList
+} = require("../../config/skipSessionAuthenticationWhiteList");
 
 const verifyLoginCredentials = (req, res, next) => {
   const { validatedParams, validationError } = validateParams(req.body, schema);
@@ -113,6 +116,18 @@ const validateToken = (req, res, next) => {
   }
 };
 
+const reqDoesNotRequireAuthentication = req => {
+  const { originalUrl: reqPath } = req;
+  const { method: reqMethod } = req;
+
+  // This method enforces the skip sessions authentication white list. Handle with care.
+  // To-do: Add test
+  const canRequestSkipSessionAuthentication = skipSessionAuthenticationWhiteList.some(
+    ({ method, path }) => path === reqPath && method === reqMethod
+  );
+  return canRequestSkipSessionAuthentication;
+};
+
 const authenticateSession = (req, res, next) => {
   try {
     const authorizationHeader = req.get("Authorization");
@@ -152,11 +167,20 @@ const authenticateSession = (req, res, next) => {
   }
 };
 
-const destroy = (req, res, next) => {
-  const authorizationHeader = req.get("Authorization");
-  const jwtToken = authorizationHeader.slice(7);
+// This method enforces the skip sessions authentication white list. Handle with care.
+// To-do: Add test
+const applySessionAuthenticationRules = (req, res, next) => {
+  if (reqDoesNotRequireAuthentication(req)) {
+    next();
+  } else {
+    authenticateSession(req, res, next);
+  }
+};
 
+const destroy = (req, res, next) => {
   try {
+    const authorizationHeader = req.get("Authorization");
+    const jwtToken = authorizationHeader.slice(7);
     const verifiedJwtToken = verifyJwtToken(jwtToken);
     const { sessionToken } = verifiedJwtToken;
 
@@ -189,5 +213,6 @@ module.exports = {
   create,
   destroy,
   validateToken,
-  authenticateSession
+  authenticateSession,
+  applySessionAuthenticationRules
 };

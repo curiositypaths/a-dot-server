@@ -13,7 +13,7 @@ const create = Joi.object().keys({
     .max(publicIdTokenLength)
     .required(),
   title: Joi.string()
-    .min(0)
+    .allow("")
     .max(maxTitleLength)
 });
 

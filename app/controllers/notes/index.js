@@ -15,6 +15,7 @@ const create = (req, res, next) => {
 
   const successCb = note => {
     req.body.publicId = note.publicId;
+    req.note = note;
     update(req, res, next);
   };
 
@@ -30,13 +31,11 @@ const create = (req, res, next) => {
   const { user: userAssociatedToTheRequest } = req;
   params.userId = userAssociatedToTheRequest.id;
   const { body: noteBody } = params;
-
   // https://github.com/ai/nanoid#custom-alphabet-or-length
   params.publicId = nanoIdCustomGenerator(
     publicIdAlphabet,
     publicIdTokenLength
   );
-
   createResource(params, schema, noteModel, successCb, errorCb, res);
 };
 module.exports = {
@@ -47,8 +46,11 @@ const update = (req, res, next) => {
   const schema = schemas.update;
 
   const successCb = revision => {
+    const { note } = req;
+    note.revisions = [revision];
     res.statusCode = HTTP_STATUS_CODES.CREATED;
-    res.json({ error: null, revision });
+    const viewData = { note };
+    res.json(createJSONView(viewData));
   };
 
   const errorCb = error => {
@@ -66,13 +68,13 @@ const update = (req, res, next) => {
     if (req.note) {
       params.noteId = req.note.id;
       createResource(params, schema, revisionModel, successCb, errorCb, res);
+    } else {
+      note.findOne({ where: { publicId } }).then(note => {
+        // required to associated the new revision (new note body) to the note
+        params.noteId = note.id;
+        createResource(params, schema, revisionModel, successCb, errorCb, res);
+      });
     }
-
-    note.findOne({ where: { publicId } }).then(note => {
-      // required to associated the new revision (new note body) to the note
-      params.noteId = note.id;
-      createResource(params, schema, revisionModel, successCb, errorCb, res);
-    });
   } catch (error) {
     // Review for error handling logic and consider adding a hook
     res.statusCode = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR;

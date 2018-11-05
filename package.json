@@ -4,7 +4,7 @@
   "main": "index.js",
   "repository": "https://github.com/curiositypaths/a-dot-server",
   "author": "Jason Decker",
-  "license": "Mozilla Public License 2.0",
+  "license": "MPL-2.0",
   "scripts": {
     "start": "webpack --colors --progress",
     "dev": "webpack --colors --progress --mode development",

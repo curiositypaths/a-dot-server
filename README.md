@@ -7,6 +7,6 @@
 - Check formatting: `format:check`
 - Correct formatting: `format`
 
-## Todo
+## Development board
 
-- [husky](https://github.com/typicode/husky)
+- [Build A. prototype](https://github.com/curiositypaths/a-dot-server/projects/1)

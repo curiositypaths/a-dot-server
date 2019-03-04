@@ -6,7 +6,3 @@
 - Lint: `yarn lint`
 - Check formatting: `format:check`
 - Correct formatting: `format`
-
-## Development board
-
-- [Build A. prototype](https://github.com/curiositypaths/a-dot-server/projects/1)
